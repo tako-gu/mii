@@ -1,0 +1,1236 @@
+//
+//
+//
+start(2);
+
+var 左外=0-1;
+var 左端=0;
+var 左３=4;
+var 中=10;
+var 右３=16;
+var 右端=20;
+var 右外=21;
+var 左=6;
+var 右=14;
+var セピアフラグ=0;
+var BGM;
+
+var ON=1;
+var OFF=0;
+var TRUE=1;
+var FALSE=0;
+var WINDOW_WIDTH=1280;
+var WINDOW_HEIGHT=720;
+var DEF_BK_WIDTH=1280;
+var DEF_BK_HEIGHT=720;
+var ev_width=1280;
+var ev_height=720;
+
+var EvLayer=0;
+var bk_no=0;
+var text_base_no=40;
+var text_no=50;
+var face_no=52;
+
+var ev_code=1;
+var ev_time=800;
+var ev_wait_time=1000;
+var sd_code=1;
+var sd_time=500;
+var st_code=1;
+var st_time=300;
+var fa_code=1;
+var fa_time=200;
+var bk_code=14;
+var bk_time=500;
+var fade_code=1;
+
+var fade_time=800;
+var fade_time2=800;
+var fade_time_s=500;
+var fade_time_m=800;
+var fade_time_l=1000;
+
+var src_time=1000;
+var wipe_time=1000;
+
+var wait_time=1000;
+var wait_time_s=500;
+var wait_time_m=800;
+var wait_time_l=1000;
+
+var fade_out_time=2000;
+var first_time=1500;
+var end_time=3000;
+var bk_scroll_time=2000;
+var mgin_time=5000;
+
+//日馬：各種立ち絵サイズを参考に％表示
+var STS = 46;
+var STM = 48;
+var STL = 86;
+
+var bgm_fade_time=2000;
+var bgm_cross_time=4000;
+var last_flag=0;
+
+var tbaseA = 220;
+
+var ret_code;
+var CharOpen=15;
+
+
+	initialyze();
+//	CharOpen=15;
+
+//	title();
+
+	Imp03_mii();
+
+exit;
+
+sub startprc
+{
+	loop = 1;
+}
+
+sub damprc
+{
+}
+
+sub StDrawEx0B(fname, layer, pos, scale )
+{
+	var fn;
+	strcat(fn, "st", fname);
+	sp_cls(layer);
+	sp_set(fn, layer, pos, 2);
+	sp_set_scale(layer, scale);
+
+	if( セピアフラグ ){
+		set_filter(layer, セピアフラグ);
+	}
+}
+
+//日馬：各fn（ファイルネームの大きさS,M,Lを調整）
+sub StDrawEx0(fname, layer, pos, ox, oy, scale){
+	StDrawEx0B(fname, layer, pos, scale);
+	var xx = 0;
+	var yy = 0;
+
+	var fn;
+	strgetcf(fn, fname, 2, 2);
+	if (scale == STS) {
+		if (fn=="01") {
+			yy = 810;
+		}
+		if (fn=="02") {
+			yy = 810;
+		}
+		if (fn=="03") {
+			yy = 1200;
+		}
+	}
+	if (scale == STM) {
+		if (fn=="01") {
+			yy = 1020;
+		}
+		if (fn=="02") {
+			yy = 1037;
+		}
+		if (fn=="03") {
+			yy = 1500;
+		}
+	}
+	if (scale == STL) {
+		if (fn=="01") {
+			yy = 1230;
+		}
+		if (fn=="02") {
+			yy = 1265;
+		}
+		if (fn=="03") {
+			yy = 1800;
+		}
+	}
+	xx += ox;
+	yy += oy;
+	sp_set_pos_move(layer, xx, yy);
+}
+sub StDrawEx(fname, layer, pos, ox, oy, scale){
+	StDrawEx0(fname, layer, pos, ox, oy, scale);
+	run(st_code, st_time);
+}
+
+//日馬：各種fnの高さを調整。
+sub StDrawS0(fname, layer, pos )
+{
+	var fn;
+	StDrawEx0B(fname, layer, pos, STS);
+	strgetcf(fn, fname, 2, 2);
+	if (fn=="01") {
+		sp_set_pos_move(layer, 0, 820);
+	}
+	if (fn=="02") {
+		sp_set_pos_move(layer, 0, 810);
+	}
+	if (fn=="03") {
+		sp_set_pos_move(layer, 0, 780);
+	}
+}
+
+sub StDrawS(fname, layer, pos )
+{
+	StDrawS0(fname, layer, pos)
+	run(st_code, st_time);
+}
+
+sub StDrawM0(fname, layer, pos )
+{
+	var fn;
+	StDrawEx0B(fname, layer, pos, STM);
+	strgetcf(fn, fname, 2, 2);
+	if (fn=="01") {
+		sp_set_pos_move(layer, 0, 970);
+	}
+	if (fn=="02") {
+//		sp_set_pos_move(layer, 0, 960);
+		sp_set_pos_move(layer, 0, 1100);
+	}
+	if (fn=="03") {
+		sp_set_pos_move(layer, 0, 800);
+//		sp_set_pos_move(layer, 0, 900);
+	}
+}
+sub StDrawM(fname, layer, pos )
+{
+	StDrawM0(fname, layer, pos);
+	run(st_code, st_time);
+}
+
+sub StDrawL0(fname, layer, pos )
+{
+	var fn;
+	StDrawEx0B(fname, layer, pos, STL);
+	strgetcf(fn, fname, 2, 2);
+	if (fn=="01") {
+		sp_set_pos_move(layer, 0, 1230);
+	}
+	if (fn=="02") {
+		sp_set_pos_move(layer, 0, 1230);
+//		sp_set_pos_move(layer, 0, 1265);
+	}
+	if (fn=="03") {
+		sp_set_pos_move(layer, 0, 1050);
+//		sp_set_pos_move(layer, 0, 1265);
+	}
+}
+
+sub StDrawL(fname, layer, pos )
+{
+	StDrawL0(fname, layer, pos);
+	run(st_code, st_time);
+}
+sub StCls0(layer)
+{
+	if (layer < 10) {
+		sp_cls(10);
+		sp_cls(11);
+		sp_cls(12);
+		sp_cls(13);
+		sp_cls(14);
+		sp_cls(15);
+		sp_cls(16);
+		sp_cls(17);
+		sp_cls(18);
+		sp_cls(19);
+	} else {
+		sp_cls(layer);
+	}
+}
+sub StCls(layer)
+{
+	StCls0(layer);
+	run(st_code, st_time);
+}
+
+//--------------------------------------------------------------------------------------------------
+//	背景表示:基底
+//--------------------------------------------------------------------------------------------------
+sub BkDraw_Base0( file, layer_no, pos )
+{
+	var posx;
+	var posy;
+	var fname;
+	var ca;
+	strgetcf(ca, file, 0, 1);
+	if (ca=="#") {
+		strcpy(fname, file);
+	} else {
+		strcat(fname, "bk", file);
+	}
+
+	posy=DEF_BK_HEIGHT-WINDOW_HEIGHT;
+	posy/=2;
+	if( pos == 右 )
+	{
+		posx=DEF_BK_WIDTH-WINDOW_WIDTH;
+		posx-=32;
+		sp_set_ex(fname, layer_no, 0-posx, 0-posy);
+	} else {
+		if( pos == 左 )
+		{
+			sp_set_ex(fname, layer_no, 0-32, 0-posy);
+		} else {
+			if( pos == 中 )
+			{
+				posx=DEF_BK_WIDTH-WINDOW_WIDTH;
+				posx/=2;
+				sp_set_ex(fname, layer_no, 0-posx, 0-posy);
+			} else {
+				sp_set_ex(fname, layer_no, 0, 0);
+			}
+		}
+	}
+	if( セピアフラグ ){
+		set_filter(layer_no, セピアフラグ);
+	}
+}
+
+sub BkDraw_Base( file, layer_no, pos )
+{
+	action_clear();
+	text_hide();
+	text_clear();
+	voice_stop(-1, 500);
+	sp_cls(-1);
+	BkDraw_Base0( file, layer_no, pos );
+}
+sub BkDraw0( file, pos ){
+	BkDraw_Base( file, bk_no, pos );
+}
+sub BkDraw( file, pos, code ){
+	BkDraw0( file, pos );
+	run(code, bk_time);
+}
+sub BkDrawZoomEx0( file, pos, ox, oy, scale ){
+	BkDraw_Base( file, bk_no, pos );
+	sp_set_pos_move( bk_no, ox, oy );
+	sp_set_scale( bk_no, scale );
+}
+
+sub BkDrawZoomEx( file, pos, ox, oy, scale, code, time ){
+	BkDrawZoomEx0( file, pos, ox, oy, scale );
+	run(code, time);
+}
+
+sub BkDrawZoom0( file, pos, scale ){
+	BkDrawZoomEx0( file, pos, 0, 0, scale );
+}
+
+sub BkDrawZoom( file, pos, scale, code, time ){
+	BkDrawZoomEx0( file, pos, 0, 0, scale );
+	run(code, time);
+}
+
+sub FaCls0 {
+	face_cls(face_no);
+}
+
+sub FaCls {
+	FaCls0();
+	run(st_code, st_time);
+}
+sub FaDraw0( file ) {
+	var fname;
+	strcat(fname, "face", file);
+	face_set(fname, 0);
+	if( セピアフラグ ){
+		set_filter(face_no, セピアフラグ);
+	}
+}
+
+sub FaDraw( file ) {
+	FaDraw0( file );
+	run(st_code, st_time);
+}
+sub SepiaStart {
+	セピアフラグ=1;
+}
+sub SepiaEnd {
+	セピアフラグ=0;
+}
+sub nameprc {
+	btn_lock(0);
+//	voice_replay();
+//	btn_set_status(0,14,0);
+	btn_unlock(0);
+}
+/*
+sub TextShow2T( flag, time ) {
+	var alpha;
+	sp_get_alpha(alpha, text_base_no);
+	text_clear();
+	if (flag) {
+		sp_set_alpha(text_base_no, 0);
+		sp_set_alpha(text_no, 0);
+		text_show();
+		action_clear();
+			action_set_fade(0, text_base_no, alpha, time);
+			action_set_fade(1, face_no, 255, time);
+			action_set_fade(2, text_no, 255, time);
+			action_btn_fade(3, 0, 14, 255, time);
+		action_sync_run(time);
+		sp_set_alpha(text_base_no, alpha);
+		sp_set_alpha(text_no, 255);
+		run();
+	} else {
+		action_clear();
+			action_set_fade(0, text_base_no, 0-alpha, time);
+			action_set_fade(1, face_no, 0-255, time);
+			action_set_fade(2, text_no, 0-255, time);
+			action_btn_fade(3, 0, 14, 0-255, time);
+		action_sync_run(time);
+		face_cls(face_no);
+		text_hide();
+		text_clear();
+		sp_set_alpha(text_base_no, alpha);
+		sp_set_alpha(text_no, 255);
+		run();
+	}
+}
+*/
+
+sub TextShow2T( flag, time ) {
+	text_clear();
+	if (flag) {
+		text_show();
+	} else {
+		text_hide();
+	}
+	run();
+}
+
+sub TextShow2( flag ) {
+	TextShow2T( flag, 300 );
+}
+
+sub TextShow(flag) {
+	TextShow2T( flag, 300 );
+}
+sub FadeOut(time) {
+	bgm_stop(time);
+//	voice_stop(-1, time);
+	voice_stop(-1);
+//	se_stop(-1, time);
+	se_stop(-1);
+	text_hide();
+	text_clear();
+	sp_cls(-1);
+	face_cls(face_no);
+	run(1, time);
+}
+
+
+sub WindowFrameSub( mode ){
+
+	if (mode == 3) {
+		text_set_base("system/main_base_a",0, 554);
+	}
+	if (mode == 4) {
+		text_set_base("system/main_base_b",0, 554);
+	}
+	if (mode == 0) {
+		text_set_base("system/main_base",0, 528);
+	}
+	sp_set_alpha(text_base_no, tbaseA);
+	btn_set_alpha(0, 14, tbaseA);
+}
+
+sub WindowFrameChange( mode ){
+	text_init_base();
+	WindowFrameSub(mode);
+	run();
+}
+
+sub initialyze {
+	text_init(28,290,588,730,102,307,535);
+	WindowFrameSub(0);
+//	select_init("system/main_sentakusi");
+	//face_init(0, face_no, 0, 554, -1);
+	face_init(0, face_no, 112, 720, -1);
+	sp_cls(-1);
+	btn_init(0, "", "");
+	btn_lock(0);
+	btn_set(0, 14, "system/main_nametag", nameprc, damprc, damprc, 65536);
+
+//日馬：名前表示位置の調整posとrectでマニュアル検索すれば分かるよ
+	btn_set_pos(0, 14, 225, 530);
+	btn_set_rect(0, 14, 430, 176, 0, 44);
+	btn_expansion(0, 14, 4);
+	btn_set_alpha(0, 14, tbaseA);
+	btn_unlock(0);
+	run();
+}
+
+sub EvDraw0( file, x, y, scale ){
+	var fname;
+	strcat(fname, "ev", file);
+	sp_cls(EvLayer);
+	sp_set_ex(fname, EvLayer, 0-x, 0-y);
+	sp_set_scale(EvLayer, scale);
+	if( セピアフラグ ){
+		set_filter(EvLayer, セピアフラグ);
+	}
+}
+
+sub EvDraw( file, x, y, scale ){
+
+	EvDraw0( file, x, y, scale );
+	run(ev_code, ev_time);
+}
+
+sub EvDrawC( file ) {
+	TextShow2(OFF);
+	EvDraw( file, 0, 0, 100 );
+	TextShow2(ON);
+}
+
+sub EvStart {
+	text_hide();
+	text_clear();
+	sp_cls(-1);
+}
+
+sub EvEnd {
+}
+sub BgmPlay(fname, flag)
+{
+	bgm_play(fname, flag);
+}
+sub BgmStop(time)
+{
+	bgm_stop(time);
+}
+
+sub Imp03_mii
+{
+		set_window_text("Imp03_mii");
+
+	//＜背景　主人公の部屋　昼＞
+
+		SetStBaseOffset(_F"ST03");	//mStOffset : mBkOffset
+
+		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, fade_time);	//主人公部屋２[昼]
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("", "僕", "「えーっと、もう一度確認したいんだけど……」");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		StDrawS0("st03a_a010", 10, 中);	// みい 通常
+		run(st_code, 800);	//バストアップ用（初回）
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		BgmPlay("bgm06",1);	//専用曲03
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii001" , "？？？" , "「にゃぅ？　なにかなっ？　ご主人さま」");
+	text("", "僕", "「君は本当に、僕がこの間看病した野良猫なの？」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii002" , "？？？" , "「そうそうっ。あのときのお礼をするために、帰ってきたんだよっ」");
+
+		StDrawS("st03a_a010", 10, 10);	// みい 通常
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii003" , "？？？" , "「この姿なら、ご主人さまといっしょにいられるよね？」");
+
+	text("屈託のない表情と澄んだ瞳。<br>嘘をついているようには見えないけれど―――");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+	//＜以下、しばらく回想シーンです＞
+	//＜場面転換＞
+	//＜背景　空　夕方＞
+
+	//＜ヒロインの名前に関わる部分なので、「みゃぁ」→「みぃ」に変更しました＞
+	//＜猫の状態。弱々しい声でお願いいたします＞
+
+		BkDrawZoomEx("#FFFFFFFF", 中, 0, 0, 100, fade_code, fade_time);	// 白
+
+		wait(1000);
+		BkDrawZoomEx0("bk000e", 中, 0, 0, 100);	//空[夕]
+//		sp_set_ex("bk/bk000e", 10, 0, 0);	//空[夕]
+		sp_set_ex("etc/ETC_effect00", 20, 0, 0);
+//		set_filter(bk_no, 10);
+		run(fade_code, 1000);	//バストアップ用（初回）
+
+		BgmPlay("bgm03",1);	//ピロー
+
+		wait(500);
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	//＜ネームタグ：子猫＞
+	text("vo01_mii004" , "子猫" , "「みぃ、みぃぃ……」");
+
+	text("数日前、確かに僕は一匹の子猫を助けた。");
+	text("道端で弱っていたその子を、<br>どうしても見過ごすことができなかったのだ。");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+	//＜背景を夜空にゆっくり変化＞
+
+		BkDrawZoomEx0("bk000nn", 中, 0, 0, 100);	//空[夜]
+		sp_set_ex("etc/ETC_effect00", 20, 0, 0);
+		run(fade_code, 2000);	//バストアップ用（初回）
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("部屋に連れ帰って、ミルクをあげたり<br>毛布で包んであげたり。");
+	text("看病の甲斐があったのか、<br>子猫はすぐに元気になった。");
+	text("ただ……");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+	//＜背景　空　昼＞
+
+		BkDrawZoomEx0("bk000d", 中, 0, 0, 100);	//空[昼]
+		sp_set_ex("etc/ETC_effect00", 20, 0, 0);
+		run(fade_code, 2000);	//バストアップ用（初回）
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("", "僕", "「ごめんな。このまま飼ってあげたいんだけど、うちのアパート、本当はペット禁止なんだ」");
+
+	//＜ネームタグ：子猫＞
+	text("vo01_mii005" , "子猫" , "「ふみぃ？」");
+
+	text("快復したところで、<br>僕は子猫を野生へと返した。");
+	text("その後のことは気になっていたのだけれど―――");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+		BkDrawZoomEx("#FFFFFFFF", 中, 0, 0, 100, fade_code, fade_time);	// 白
+
+		wait(1000);
+
+	//＜回想ここまで＞
+	//＜場面転換＞
+	//＜背景　主人公の部屋　昼＞
+
+		SetStBaseOffset(_F"ST03");	//mStOffset : mBkOffset
+
+//		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, fade_time);	//主人公部屋２[昼]
+		BkDrawZoomEx0("bk012d", 中, 0, 0, 100);	//主人公部屋２[昼]
+		StDrawS0("st03a_a010", 10, 10);	// みい 通常
+		run(st_code, 1000);	//バストアップ用（初回）
+
+		BgmPlay("bgm06",1);	//専用曲03
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("", "僕", "「まさか人間の姿で戻ってくるなんて。うーん……」");
+
+		StDrawS("st03a_a040", 10, 10);	// みい きょとん
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii006" , "？？？" , "「うにゃ？　どうしたの？
+	もしかして、信じてない？」");
+	text("", "僕", "「ううん。そういうわけじゃないんだけどね。
+	その耳とか尻尾も本物っぽいし」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii007" , "？？？" , "「えへへっ。さわってみる？<br>　ご主人さまなら、いいよ？」");
+
+//日馬：できれば頭アップにしたい…無理ならそのまま
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BkDrawZoomEx0("bk012d", 中, 0, 0, 140);	//主人公部屋２[昼]
+		StDrawEx0("st03a_a010", 10, 中, 0, 1875, 150);	// みい 通常
+
+		run(fade_code, 1000);	//Time：手打ち
+
+		se_stop(-1);
+		se_play_ex("SE30_A005A");	//柔らかい物に触れた音
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("ぴょこぴょこと動く猫耳に猫尻尾。<br>見るからにモフモフだ。");
+
+	text("", "僕", "「じゃあ少しだけ……って、違う違う。そういう話をしてるんじゃなくて」");
+
+//日馬：上のアップができた場合のみ使用。できないならここも削除で。
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BkDrawZoomEx0("bk012d", 中, 0, 0, 100);	//主人公部屋２[昼]
+		StDrawS0("st03a_a040", 10, 中);	// みい きょとん
+		run(fade_code, 800);	//Time：手打ち
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("この子が言う「一緒にいる」は、つまりこの部屋で僕と共に暮すということだろう。");
+
+	text("それはそれで問題があるような……。");
+
+		StDrawS("st03a_a010", 10, 10);	// みい 通常
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii008" , "？？？" , "「あのね。わたし、ずーっとご主人さまのことを考えてたの。なんにちも、なんにちも」");
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii009" , "？？？" , "「いっしょうけんめい、わたしをかんびょーしてくれたご主人さまにまた会いたいなぁ、会ってお礼をしたいなぁって」");
+
+//日馬：表情変化対応不可。text_w×
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii010" , "？？？" , "「そしたらにゃんと！<br>　いつの間にかにんげんの姿になってたんだよっ。ふしぎだよね、にゃふふっ」");
+
+	text("", "僕", "「う、うん……」");
+
+		StDrawS("st03a_a010", 10, 10);	// みい 通常
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii011" , "？？？" , "「わたし、ご主人さまにちゃんとお返ししたいの。だからお家においてほしくて……」");
+
+		StDrawS("st03a_a040", 10, 10);	// みい きょとん
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii012" , "？？？" , "「ダメかな？　ご主人さまのためにいっぱいいっぱい頑張るよっ？」");
+	text("", "僕", "「うーん……気持ちは嬉しいんだけど……」");
+
+		StDrawS("st03a_a010", 10, 10);	// みい 通常
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii013" , "？？？" , "「おせわとか、いーっぱいするから。
+	ねっ？　ご主人さま」");
+
+	text("まっすぐな瞳でじっと見つめられる。");
+	text("急な話で、しかもびっくりな展開だけど……
+	こんな健気な女の子を邪険に扱うことは、
+	僕にはできそうになかった。");
+
+	text("", "僕", "「……わかった。そこまで言ってくれるなら」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	//＜期待している感じです＞
+	text("vo01_mii014" , "？？？" , "「あっ。じゃあじゃあ……」");
+	text("", "僕", "「狭い部屋だけど、一緒に暮らしてみようか」");
+
+		StDrawS("st03a_a030", 10, 10);	// みい 微笑み
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii015" , "？？？" , "「ありがとうご主人さま！<br>　これからよろしくねっ」");
+	text("", "僕", "「うん。よろしく。えーっと…………君のこと、なんて呼べばいいのかな」");
+
+		StDrawS("st03a_a040", 10, 10);	// みい きょとん
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii016" , "？？？" , "「みゃっ？　えっとね、わたし元々野良猫だから、なまえがないの」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii017" , "？？？" , "「だからご主人さまがつけて？」");
+	text("", "僕", "「急に言われると悩むなぁ。どうしよう……」");
+
+		StDrawS("st03a_a030", 10, 10);	// みい 微笑み
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii018" , "？？？" , "「ご主人さまがくれた名前なら、なんでも嬉しいよっ」");
+
+//日馬：いつものスクリプトならスライド入る場面やな
+
+	//＜ここからの命名シーン修正しました＞
+
+	text("屈託なく笑う女の子。<br>その、幼くも可愛らしい声が<br>僕の耳をくすぐる。");
+
+	text("", "僕", "（そう言えば、猫の姿の時も<br>　可愛く鳴いてたよなぁ。みぃみぃって）");	////■音声加工系：「」は削除してください
+
+	text("みぃみぃ……って。");
+	text("んっ？　もしかして……。");
+
+	text("", "僕", "「ちょっと安直だけど、いけるかな」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+
+	//＜ネームタグ：？？？＞
+	text("vo01_mii019" , "？？？" , "「なになにっ？　思いついたっ？」");
+	text("", "僕", "「うん。“みい”っていうのはどうかな。猫の鳴き声っぽい気がするんだけど、そのまんますぎる？」");
+
+		StDrawS("st03a_a020", 10, 10);	// みい 笑顔
+//		StDrawS("st03a_a040", 10, 10);	// みい きょとん
+
+	//＜最初は、名前を自分で確かめるように。途中から喜びが爆発します＞
+	text("vo01_mii020" , "みい" , "「みい…………みいっ！<br>　そっかぁ、わたし、こういう鳴き声だったんだ。みぃみぃっ」");
+
+	text("", "僕", "「えっと……気に入ってくれた？」");
+
+		StDrawS("st03a_b030", 10, 10);	// みい 微笑み
+
+		行動_ペコリ２(10, 0);
+
+	text("vo01_mii021" , "みい" , "「うんっ、すっごく！<br>　ありがとう、ご主人さまっ」");
+
+		StDrawS("st03a_b020", 10, 10);	// みい 笑顔
+
+	text("vo01_mii022" , "みい" , "「よーっし。今日からわたしはみい。ご主人さまのためにがんばるぞー！」");
+
+	text("えいえいおー、と<br>みいが拳を突き上げる。");
+	text("合わせて揺れた尻尾も、<br>どこか張り切っているようにみえる。");
+
+	//＜シーン修正ここまで＞
+
+	text("", "僕", "「ところで。その『ご主人さま』って呼び方はちょっと……」");
+
+		StDrawS("st03a_b040", 10, 10);	// みい きょとん
+
+	text("vo01_mii023" , "みい" , "「みゃっ？　だってご主人さまはご主人さまでしょ？」");
+
+		TextShow2(OFF);	// テキスト枠フェードアウト
+
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+	//＜時間経過＞
+	//＜背景　空　昼＞
+
+		BkDrawZoomEx("#FF000000", 中, 0, 0, 100, fade_code, 1500);	// 黒
+
+		wait(1000);
+
+		BkDrawZoomEx("bk000d", 中, 0, 0, 100, fade_code, 1500);	//空[昼]
+
+//		BgmPlay("bgm05",1);	//専用曲02
+
+		TextShow2(ON);	// テキスト枠フェードイン
+
+	text("こうして始まったみいとの生活。<br>宣言どおり、彼女はとにかく一生懸命<br>世話を焼いてくれた。");
+	text("そのことはとても嬉しいのだけれど―――");
+
+		TextShow2(OFF);	// テキスト枠フェードアウト
+
+	//＜背景　主人公の部屋　昼＞
+
+		SetStBaseOffset(_F"ST03");	//mStOffset : mBkOffset
+
+		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, 1000);	//主人公部屋２[昼]
+
+		StDrawS("st03a_a060", 10, 10);	// みい 焦り
+
+		se_stop(-1);
+		se_play_ex("SE30_A009A");	//ショックを受ける
+
+		BgmPlay("bgm07",1);	//専用曲04
+
+		TextShow2(ON);	// テキスト枠フェードイン
+
+	text("vo01_mii024" , "みい" , "「うみゃぁ……ごめんなさいご主人さま、パン、まっくろになっちゃった……」");
+	text("", "僕", "「あははは……平気だよ。少し焦げたくらいなら、普通に食べられるから」");
+
+		TextShow2(OFF);	// テキスト枠フェードアウト
+
+	//＜場面転換＞
+	//＜背景　主人公の部屋　昼＞
+
+		BkDrawZoomEx("#FF000000", 中, 0, 0, 100, fade_code, fade_time);	// 黒
+
+		wait(500);
+
+		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, fade_time);	//主人公部屋２[昼]
+
+		TextShow2(ON);	// テキスト枠フェードイン
+
+		FaDraw("fa03a_a030");	// みい 微笑み
+
+	//＜洗濯物を入れたカゴを持って、機嫌よく歩いています＞
+	text("vo01_mii025" , "みい" , "「おせんたく～、おっせんたく～」");
+
+		FaCls();	//フェイス消去
+
+		FaDraw("fa03a_a070");	// みい 驚き
+
+	text("vo01_mii026" , "みい" , "「ふみゃっ？！」");
+
+		FaCls();	//フェイス消去
+
+	//＜SE　派手に転ぶ＞
+		se_stop(-1);
+		se_play_ex("SE30_A012A");	//尻餅をつく感じ
+
+		wait(800);
+
+	text("", "僕", "「だ、大丈夫？」");
+
+		FaDraw("fa03a_a060");	// みい 焦り
+
+	text("vo01_mii027" , "みい" , "「にゃぅぅ……わたしはへいきだけど、せんたくものが散らばっちゃったよ～……」");
+
+		FaCls();	//フェイス消去
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+		BkDrawZoomEx("#FF000000", 中, 0, 0, 100, fade_code, fade_time);	// 黒
+
+		wait(1000);
+
+	//＜場面転換＞
+	//＜背景　主人公の部屋　夜明かりあり＞
+
+		BkDrawZoomEx("bk000nn", 中, 0, 0, 100, fade_code, 1000);	//空[夜]
+
+		wait(500);
+
+		BkDrawZoomEx("bk012nn", 中, 0, 0, 100, fade_code, 1000);	//主人公部屋２[夜]
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		BgmPlay("bgm06",1);	//専用曲03
+
+		FaDraw("fa03a_b060");	// みい 焦り
+
+	text("vo01_mii028" , "みい" , "「ごめんねご主人さま、わたし、しっぱいばっかりで……これじゃ、逆におじゃまむしだよね……」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「気にしないで。多分まだ、人間の体に慣れてないんだよ」");
+
+		FaDraw("fa03a_b060");	// みい 焦り
+
+	text("vo01_mii029" , "みい" , "「そうなのかなぁ。わたし、前からけっこーおっちょこちょいだったから……」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「大丈夫大丈夫。僕のためになにかしようと思ってくれるだけで、すごく嬉しいから」");
+	text("", "僕", "「だからありがとう、みい」");
+
+		se_stop(-1);
+		se_play_ex("SE99_K017");	//髪の毛触る
+
+	text("感謝の気持ちを伝えるために、<br>僕はみいの頭をそっと撫でる。");
+
+		FaDraw("fa03a_b030");	// みい 微笑み
+
+	//＜頭を撫でられて気持ちよさそう＞
+	text("vo01_mii030" , "みい" , "「ふにゃぁ～……『ありがとう』は
+	こっちのセリフだよぉ」");
+
+		FaCls();	//フェイス消去
+
+	text("自分以外の誰かがいる生活―――");
+	text("一人暮らしを始めて以来、<br>久しぶりに感じる温かさが<br>確かにここにはあった。");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+		BkDrawZoomEx("#FF000000", 中, 0, 0, 100, fade_code, 2000);	// 黒
+
+		wait(1000);
+
+	//＜時間経過＞
+	//＜背景　空　昼＞
+
+		BkDrawZoomEx("bk000d", 中, 0, 0, 100, fade_code, 2000);	//空[昼]
+
+		wait(500);
+
+		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, 1000);	//主人公部屋２[昼]
+
+		BgmPlay("bgm06",1);	//専用曲03
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		FaDraw("fa03a_a020");	// みい 笑顔
+
+	text("vo01_mii031" , "みい" , "「ねーねー、ご主人さまー」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「んー？　なに？」");
+
+		FaDraw("fa03a_a010");	// みい 通常
+
+	text("vo01_mii032" , "みい" , "「今日っておやすみの日なんだよねっ？」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「そうだよ。日曜日だからね」");
+
+		wait(100);
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		wait(100);
+
+	//＜EV表示＞
+		sp_set_ex("#FFFFFFFF", 21);
+		run(fade_code, 1000);
+
+		wait(1000);
+		EvStart();	//イベント開始
+
+//日馬：EV位置調整いるよ！　EVで表現難しいから顔グラ表示？
+		EvDraw0("ev003aa", 0, 100, 100);
+		run(fade_code, 2000);
+
+		action_clear();
+			action_set_fade(1, 21, -0xFF, 2000);
+		action_run(2000);
+		set_action_clear();	//アクションクリア予約
+		run_no_wait();
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		FaDraw("fa03a_a030");	// みい 微笑み
+
+	text("vo01_mii033" , "みい" , "「だったら、つくえに向かってばっかいないで<br>　わたしとあそぼうよー！」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「遊んであげたいのはやまやまなんだけど、勉強もしないといけないんだよ。一応学生だからね」");
+
+		EvDraw("ev003ab", 0, 100, 100);
+
+		FaDraw("fa03a_a040");	// みい きょとん
+
+	text("vo01_mii034" , "みい" , "「え～……ご主人さま、もう３０分もすわったままだよ？」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「『もう』って言うか『まだ』って言うか……」");
+
+	//＜「せーかつしゅーかんびょー」は、少したどたどしくお願いいたします＞
+
+		FaDraw("fa03a_a020");	// みい 笑顔
+
+	text("vo01_mii035" , "みい" , "「ほらほら。からだ動かさないと、せーかつしゅーかんびょーっていうのになっちゃうんでしょ？　テレビでやってたよっ！」");
+
+		FaCls();	//フェイス消去
+		FaDraw("fa03a_b060");	// みい 焦り
+
+	text("vo01_mii036" , "みい" , "「ご主人さまがそうなっちゃったら、
+	わたし悲しいよぉ」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「えーっと。本当は僕と遊びたいだけだよね？」");
+
+		FaDraw("fa03a_a060");	// みい 焦り
+
+	text("vo01_mii037" , "みい" , "「ぎくぅっ？！　そ、そんなことはない……にゃ？」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「露骨な猫言葉が出てるときは怪しいんだよなぁ」");
+
+		FaDraw("fa03a_a060");	// みい 焦り
+
+	text("vo01_mii038" , "みい" , "「ううぅぅっ……と、とにかく！<br>　じっとしてるのはよくないにゃぁー！」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「はいはい。それじゃあ、外にでも出ようか。なにして遊ぶ？」");
+
+		EvDraw("ev003ac", 0, 100, 100);
+
+		FaDraw("fa03a_b030");	// みい 微笑み
+
+	text("vo01_mii039" , "みい" , "「やきゅう！　今日こそ１８０キロをなげてみせるんだから！」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「キャッチボールね。じゃあこの前買ったゴムボール持っていかなきゃ」");
+
+	text("どうやらみいはボール遊びが好きなようで、こうやってせがむことが多い。");
+	text("元気が良いのは好ましいんだけど、スカート姿で激しい動きは……どうなんだろう。");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+	//＜EVここまで＞
+	//＜背景　主人公の部屋　昼＞
+
+		EvEnd();	//イベント終了
+		BkDrawZoomEx("bk012d", 中, 0, 0, 100, fade_code, fade_time);	//主人公部屋２[昼]
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		FaDraw("fa03a_b030");	// みい 微笑み
+
+	text("vo01_mii040" , "みい" , "「ご主人さま、はやくっ！　はやくっ！」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「うん。ちょっと待っててね」");
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		BgmStop(1500);	//ＢＧＭフェード停止
+
+	//＜時間経過＞
+	//＜背景　空　昼→夕方へとゆっくり切り替え＞
+
+		BkDrawZoomEx("bk000e", 中, 0, 0, 100, fade_code, 2000);	//空[夕]
+
+		wait(1000);
+
+		BkDrawZoomEx("bk000nn", 中, 0, 0, 100, fade_code, 2000);	//空[夜]
+
+	//＜背景　主人公の部屋　夜明かりあり＞
+		BkDrawZoomEx("bk012nn", 中, 0, 0, 100, fade_code, fade_time);	//主人公部屋２[夜]
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+		BgmPlay("bgm07",1);	//専用曲04
+
+		FaDraw("fa03a_a030");	// みい 微笑み
+
+	text("vo01_mii041" , "みい" , "「ごちそうさまでした。ふみゃ～……うんどーしたあとのご飯は、いつも以上においしいねぇ～」");
+
+		FaCls();	//フェイス消去
+
+	text("みいが、僕の膝の上で<br>とろけそうな顔をしている。");
+	text("食事時はここがみいの定位置だ。");
+
+		FaDraw("fa03a_a010");	// みい 通常
+
+	text("vo01_mii042" , "みい" , "「うにゅぅ……おなかいっぱいなったら、なんだかねむたくなってきちゃった……」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「もう少ししたらお風呂沸かすから、寝る前にちゃんと入ってね」");
+
+		FaDraw("fa03a_a050");	// みい ニヤリ
+
+	text("vo01_mii043" , "みい" , "「んんぅ……ご主人さまといっしょだったら入ろっかな～」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「だからそれはダメだって」");
+
+		FaDraw("fa03a_a040");	// みい きょとん
+
+	text("vo01_mii044" , "みい" , "「え～、なんでなんでっ？」");
+
+		FaCls();	//フェイス消去
+
+	text("", "僕", "「なんでって、そりゃ――」");
+
+	text("元々猫であるとはいえ、<br>今は人の……それも女の子の姿だ。");
+	text("そんなみいとお風呂だなんて、<br>さすがによろしくない。");
+
+	text("", "僕", "（慕ってくれるのは嬉しいんだけどなぁ」");	////■音声加工系：「」は削除してください
+
+		TextShow(OFF);	// テキスト枠フェードアウト
+
+		SetStBaseOffset(_F"ST03");	//mStOffset : mBkOffset
+		BkDrawZoomEx0("bk012nn", 中, 0, 0, 140);	//主人公部屋２[夜]
+		StDrawL0("st03a_a040", 10, 10);	// みい きょとん
+		se_stop(-1);
+		se_play_ex("SE07_A115B");	//物音(12)：布製
+
+		run(fade_code, 1000);	//Time：手打ち
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("vo01_mii045" , "みい" , "「ご主人さま？」");
+
+		se_stop(-1);
+		se_play_ex("SE07_A005A");	//布が擦れる音
+
+	text("", "僕", "「うわぁっ？」");
+
+	text("いつの間にか、みいが僕のことを見上げていた。<br>純粋無垢な顔がほぼゼロ距離だ。");
+
+	text("vo01_mii046" , "みい" , "「さいきんのご主人さま、時々むずかしい顔してるよ？<br>　どうかしたの？」");
+	text("", "僕", "「な、なんでもないよ。みいの気のせいじゃないかな」");
+
+		StDrawL("st03a_a050", 10, 10);	// みい ニヤリ
+
+	//＜不満顔です＞
+	text("vo01_mii047" , "みい" , "「ええぇ～？　ホントかにゃぁ」");
+
+	text("みいのことを考えているなんて、<br>言えるわけがない。");
+	text("でもどうして僕は、<br>みいがこんなに気になるんだろう。");
+
+		StDrawL("st03a_a040", 10, 10);	// みい きょとん
+
+	//＜じとーっと主人公を見つめています＞
+	text("vo01_mii048" , "みい" , "「むむむむむ～」");
+
+	text("偶然助けた猫の女の子。<br>ただそれだけのはずなのに――。");
+
+
+	//＜了＞
+		TextShow(OFF);
+
+		FadeOut(3000);	// フェードアウト
+
+		wait(1500);
+
+		TextShow(ON);	// テキスト枠フェードイン
+
+	text("こちらで本編は終了となります。ご覧いただき有難うございました。");
+
+	text("ここから先の展開は、商品同封のミニドラマでお楽しみください。");
+
+};
+
+
+sub 行動_驚く(layer, sync) {
+	action_clear();
+
+	action_set_straight(0, layer, 0, -20, 100);
+	action_set_straight(0, layer, 0, 20, 100);
+
+	if( sync ) {
+		action_sync_run(200);
+	} else {
+		action_run(300);	//200だと時間が足りない模様
+		set_action_clear();
+	}
+}
+sub 行動_ペコリ２( layer, sync, time ){
+
+	action_clear();
+
+	action_set_straight(0, layer, 0, 10, time/2);
+	action_set_straight(0, layer, 0, -10, time/2);
+
+	if(sync) {
+		action_sync_run(time);
+	} else {
+		action_run(time);
+		set_action_clear();
+	}
+}
+
+sub 行動_ぴょんぴょん( layer, sync ){
+
+	action_clear();
+
+	action_set_straight(0, layer, 0, -20, 100);
+	action_set_straight(0, layer, 0, 20, 100);
+	action_set_straight(0, layer, 0, -20, 100);
+	action_set_straight(0, layer, 0, 20, 100);
+
+	if(sync) {
+		action_sync_run(400);
+	} else {
+		action_run(500);	//400だと時間が足りない?
+		set_action_clear();
+	}
+}
